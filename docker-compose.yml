@@ -1,0 +1,17 @@
+services:
+  web:
+    image: nginx:alpine
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.compose-smoke.rule=Host(`compose-smoke.staging.eflex.app`)"
+      - "traefik.http.routers.compose-smoke.entrypoints=websecure"
+      - "traefik.http.routers.compose-smoke.tls=true"
+      - "traefik.http.routers.compose-smoke.tls.certresolver=letsencrypt"
+      - "traefik.http.services.compose-smoke.loadbalancer.server.port=80"
+    networks:
+      - proxy
+networks:
+  proxy:
+    external: true
